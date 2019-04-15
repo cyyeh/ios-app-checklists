@@ -64,20 +64,6 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     tableView.deselectRow(at: indexPath, animated: true)
   }
   
-  // MARK:- Actions
-  @IBAction func addItem() {
-    let newRowIndex = checklist.items.count
-    
-    let item = ChecklistItem()
-    item.text = " I am a new row"
-    item.checked = true
-    checklist.items.append(item)
-    
-    let indexPath = IndexPath(row: newRowIndex, section: 0)
-    let indexPaths = [indexPath]
-    tableView.insertRows(at: indexPaths, with: .automatic)
-  }
-  
   // MARK:- Navigation
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "AddItem" {

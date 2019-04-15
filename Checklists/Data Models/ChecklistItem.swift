@@ -9,8 +9,14 @@
 import Foundation
 
 class ChecklistItem: NSObject, Codable {
-  var text = ""
-  var checked = false
+  var text: String
+  var checked: Bool
+  
+  init(text: String = "to do item", checked: Bool = false) {
+    self.text = text
+    self.checked = checked
+    super.init()
+  }
   
   func toggleChecked() {
     checked = !checked
