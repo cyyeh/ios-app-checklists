@@ -9,6 +9,8 @@
 import UIKit
 
 class Checklist: NSObject, Codable {
+  static let icons = [ "No Icon", "Appointments", "Birthdays", "Chores",
+                       "Drinks", "Folder", "Groceries", "Inbox", "Photos", "Trips" ]
   var iconName: String
   var name: String
   var items = [ChecklistItem]()

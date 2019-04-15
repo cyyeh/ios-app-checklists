@@ -10,6 +10,7 @@ import Foundation
 
 class DataModel {
   var lists = [Checklist]()
+  static let icons = Checklist.icons
   var indexOfSelectedChecklist: Int {
     get {
       return UserDefaults.standard.integer(forKey: "ChecklistIndex")
