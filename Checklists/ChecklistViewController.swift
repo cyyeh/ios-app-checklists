@@ -17,28 +17,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     
     navigationController?.navigationBar.prefersLargeTitles = true
     
-    let item1 = ChecklistItem()
-    item1.text = "Walk the dog"
-    items.append(item1)
-    
-    let item2 = ChecklistItem()
-    item2.text = "Brush my teeth"
-    item2.checked = true
-    items.append(item2)
-    
-    let item3 = ChecklistItem()
-    item3.text = "Learn iOS development"
-    item3.checked = true
-    items.append(item3)
-    
-    let item4 = ChecklistItem()
-    item4.text = "Soccer practice"
-    items.append(item4)
-    
-    let item5 = ChecklistItem()
-    item5.text = "Eat ice cream"
-    item5.checked = true
-    items.append(item5)
+    loadChecklistItems()
   }
 
   func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
@@ -74,6 +53,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     items.remove(at: indexPath.row)
     let indexPaths = [indexPath]
     tableView.deleteRows(at: indexPaths, with: .automatic)
+    saveChecklistItems()
   }
   
   // MARK:- Table View Delegate
@@ -83,6 +63,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
       item.toggleChecked()
       
       configureCheckmark(for: cell, with: item)
+      saveChecklistItems()
     }
     
     tableView.deselectRow(at: indexPath, animated: true)
@@ -130,6 +111,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     let indexPaths = [indexPath]
     tableView.insertRows(at: indexPaths, with: .automatic)
     navigationController?.popViewController(animated: true)
+    saveChecklistItems()
   }
   
   func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
@@ -140,6 +122,39 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
       }
     }
     navigationController?.popViewController(animated: true)
+    saveChecklistItems()
+  }
+  
+  // MARK:- Data Persistence
+  func documentsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
+  }
+  
+  func dataFilePath() -> URL {
+    return documentsDirectory().appendingPathComponent("Checklists.plist")
+  }
+  
+  func saveChecklistItems() {
+    let encoder = PropertyListEncoder()
+    do {
+      let data = try encoder.encode(items)
+      try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+    } catch {
+      print("Error encoding item array: \(error.localizedDescription)")
+    }
+  }
+
+  func loadChecklistItems() {
+    let path = dataFilePath()
+    if let data = try? Data(contentsOf: path) {
+      let decoder = PropertyListDecoder()
+      do {
+        items = try decoder.decode([ChecklistItem].self, from: data)
+      } catch {
+        print("Error decoding item array: \(error.localizedDescription)")
+      }
+    }
   }
 }
 
