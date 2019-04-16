@@ -28,7 +28,9 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
   
   func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
     let label = cell.viewWithTag(1000) as! UILabel
+    let dueDateLabel = cell.viewWithTag(1002) as! UILabel
     label.text = item.text
+    dueDateLabel.text = dateToString(date: item.dueDate)
   }
   
   // MARK:- Table View Data Source
@@ -85,22 +87,17 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
   }
   
   func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem) {
-    let newRowIndex = checklist.items.count
     checklist.items.append(item)
+    checklist.sortChecklistitems()
+    tableView.reloadData()
     
-    let indexPath = IndexPath(row: newRowIndex, section: 0)
-    let indexPaths = [indexPath]
-    tableView.insertRows(at: indexPaths, with: .automatic)
     navigationController?.popViewController(animated: true)
   }
   
   func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
-    if let index = checklist.items.firstIndex(of: item) {
-      let indexPath = IndexPath(row: index, section: 0)
-      if let cell = tableView.cellForRow(at: indexPath) {
-        configureText(for: cell, with: item)
-      }
-    }
+    checklist.sortChecklistitems()
+    tableView.reloadData()
+
     navigationController?.popViewController(animated: true)
   }
 }
