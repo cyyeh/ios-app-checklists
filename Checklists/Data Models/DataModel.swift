@@ -40,7 +40,7 @@ class DataModel {
     let encoder = PropertyListEncoder()
     do {
       let data = try encoder.encode(lists)
-      try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+      try data.write(to: dataFilePath(), options: .atomic)
     } catch {
       print("Error encoding list array: \(error.localizedDescription)")
     }
